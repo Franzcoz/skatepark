@@ -42,10 +42,13 @@ router.get('/register', (req, res) => {
 
 router.post('/register', async (req, res) => {
   // 1. Recuperamos los valores del formulario
+  const foto = req.files.foto
   const email = req.body.email
-  const name = req.body.name
+  const name = req.body.nombre
   const password = req.body.password
-  const password_confirm = req.body.password_confirm
+  const password_confirm = req.body.password2
+  const xp = req.body.anos
+  const spec = req.body.especialidad
 
   // 2. validar que contraseñas sean iguales
   if (password != password_confirm) {
@@ -60,12 +63,17 @@ router.post('/register', async (req, res) => {
     return res.redirect('/register')
   }
 
+  // Guardar imagen
+  const path = `fotos/${name}.jpg`
+  foto.mv(`static/${path}`)
+
+  // Creo el usuario
   const password_encrypt = await bcrypt.hash(password, 10)
   console.log(password_encrypt);
-  await create_user(email, name, password_encrypt)
+  await create_user(email, name, password_encrypt, xp, spec, path)
 
   // 4. Guardo el nuevo usuario en sesión
-  req.session.user = { name, email, password }
+  req.session.user = { name, email, password, xp, spec, path }
   res.redirect('/')
 });
 

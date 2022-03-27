@@ -10,6 +10,7 @@ const app = express()
 // 2. Configura dichas librerías
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use(express.static('static'));
 
 app.use(flash())
 

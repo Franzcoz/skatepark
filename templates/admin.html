@@ -1,48 +1,34 @@
 {% extends 'layout.html' %}
-{% from 'macros.html' import navbar %}
-
-{% block styles %}
-<style>
-  body {
-    background: black;
-    color: white;
-    text-align: center;
-  }
-
-  td,
-  th {
-    color: white;
-    text-align: center;
-  }
-
-  .col {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-</style>
-{% endblock %}
 
 {% block main %}
-  {{ navbar('/admin') }}
 
-  <h2 class="mb-2">Usuarios registrados</h2>
-  <table class="table">
+<h1>Skate Park</h1>
+
+<div class="py-4">
+  <h2>Administración</h2>
+  <hr class="w-50" />
+
+  <table class="table w-50 m-auto">
     <thead>
       <tr>
         <th scope="col">#</th>
+        <th scope="col">Foto</th>
         <th scope="col">Nombre</th>
-        <th scope="col">Correo</th>
-        <th scope="col">Validado</th>
+        <th scope="col">Años de experiencia</th>
+        <th scope="col">Especialidad</th>
+        <th scope="col">Estado</th>
       </tr>
     </thead>
     <tbody id="cuerpo">
       {% for user in users %}
         <tr>
           <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td><input data-id="{{ user.id }}" type="checkbox" class="check-auth" {% if user.auth %}checked{% endif %}></td>
+          <td><div style="background-image: url('{{ user.foto }}');">
+              </div></td>
+          <td>{{ user.nombre }}</td>
+          <td>{{ user.anos_experiencia }}</td>
+          <td>{{ user.especialidad }}</td>
+          <td><input data-id="{{ user.id }}" type="checkbox" class="check-auth" {% if user.estado %}checked{% endif %}></td>
         </tr>
       {% endfor %}
     </tbody>
@@ -64,8 +50,8 @@
       const user_id = $(this).attr('data-id')
 
       // mandamos un PUT mediante AJAX
-      await axios.put(`/users/${user_id}`, {
-        new_auth: esta_validado
+      await axios.put(`/state/${user_id}`, {
+        new_state: true
       })
 
       console.log(`El usuario ${user_id} cambia a ${esta_validado}`)
