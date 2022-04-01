@@ -1,8 +1,15 @@
 {% extends 'layout.html' %}
 
+{% block nav %}
+  <a class="nav-link" href="/">Inicio</a>
+  <a class="nav-link" href="/datos">Usuario</a>
+  <a class="nav-link active" aria-current="page" href="/admin">Administrar</a>
+  <a class="nav-link" href="/logout">Salir</a>
+  {% endblock %}
+
 {% block main %}
 
-<h1>Skate Park</h1>
+<h1 class="m-4">Skate Park</h1>
 
 <div class="py-4">
   <h2>Administración</h2>

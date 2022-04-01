@@ -76,8 +76,8 @@ async function del_usr(id) {
   const client = await pool.connect()
 
   await client.query({
-    text: 'delete skaters where id=$1',
-    values: [parseInt(id)]
+    text: 'delete from skaters where id=$1',
+    values: [id]
   })
 
   client.release()

@@ -2,7 +2,7 @@
 
 {% block main %}
 
-    <h1>Skate Park</h1>
+    <h1 class="m-4">Skate Park</h1>
 
     <div class="py-4">
       <h2>Lista de participantes</h2>
@@ -20,30 +20,16 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <th scope="row">1</th>
-            <td><div></div></td>
-            <td>Tony Hawk</td>
-            <td>12</td>
-            <td>Kickflip</td>
-            <td class="text-success font-weight-bold">Aprobado</td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td><div></div></td>
-            <td>Evelien Bouilliart</td>
-            <td>10</td>
-            <td>Heelflip</td>
-            <td class="text-success font-weight-bold">Aprobado</td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td><div></div></td>
-            <td>Danny Way</td>
-            <td>8</td>
-            <td>Ollie</td>
-            <td class="text-warning font-weight-bold">En revisión</td>
-          </tr>
+          {% for user in users %}
+            <tr>
+              <td>{{ user.id }}</td>
+              <td><div style="background-image: url('{{ user.foto }}');"></div></td>
+              <td>{{ user.nombre }}</td>
+              <td>{{ user.anos_experiencia }}</td>
+              <td>{{ user.especialidad }}</td>
+              <td {% if user.estado %} class="text-success font-weight-bold">Aprobado{% endif %}{% if user.estado == false %} class="text-warning font-weight-bold">En revisión{% endif %}</td>
+            </tr>
+          {% endfor %}
         </tbody>
       </table>
       <a href="#">Iniciar Sesión</a> |

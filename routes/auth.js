@@ -19,14 +19,14 @@ router.post('/login', async (req, res) => {
   // 2. Validar que usuario sí existe
   const user = await get_user(email)
   if (!user) {
-    req.flash('errors', 'Usuario no existe o contraseña incorrecta')
+    req.flash('errors', 'Usuario no existe')
     return res.redirect('/login')
   }
 
   // 3. Validar que contraseña coincida con lo de la base de datos
   const son_iguales = await bcrypt.compare(password, user.password)
   if ( !son_iguales ) {
-    req.flash('errors', 'Usuario no existe o contraseña incorrecta')
+    req.flash('errors', 'Contraseña incorrecta')
     return res.redirect('/login')
   }
 
@@ -57,7 +57,7 @@ router.post('/register', async (req, res) => {
   }
 
   // 3. validar que email no exista previamente
-  const user = await get_user(email)
+  let user = await get_user(email)
   if (user) {
     req.flash('errors', 'Usuario ya existe o contraseña incorrecta')
     return res.redirect('/register')
@@ -73,7 +73,8 @@ router.post('/register', async (req, res) => {
   await create_user(email, name, password_encrypt, xp, spec, path)
 
   // 4. Guardo el nuevo usuario en sesión
-  req.session.user = { name, email, password, xp, spec, path }
+  user = await get_user(email)
+  req.session.user = user
   res.redirect('/')
 });
 

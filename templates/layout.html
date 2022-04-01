@@ -9,7 +9,25 @@
     {% block styles %}{% endblock %}
     <link rel="stylesheet" href="estilos.css" />
   </head>
-  <body>
+  <body class="m-0 p-0">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/">Skate Park</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            {% block nav %}
+            <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+            <a class="nav-link" href="/datos">Usuario</a>
+            <a class="nav-link" href="/admin">Administrar</a>
+            <a class="nav-link" href="/logout">Salir</a>
+            {% endblock %}
+          </div>
+        </div>
+      </div>
+    </nav>
     <div class="container">
       {% for error in errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">

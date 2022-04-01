@@ -1,6 +1,7 @@
 const express = require('express');
+const fetch = require('fetch');
 const bcrypt = require('bcrypt');
-const { get_users, set_state, update_usr, del_usr } = require('../db.js');
+const { get_user, get_users, set_state, update_usr, del_usr } = require('../db.js');
 
 const router = express.Router()
 
@@ -14,23 +15,20 @@ function protected_routes (req, res, next) {
 }
 
 router.get('/admin', protected_routes, async (req, res) => {
-  const user = req.session.user
   // me traigo a lista de todos los usuarios
   const users = await get_users()
-
-
   res.render('admin.html', { users })
 });
 
-router.get('/datos', protected_routes, (req, res) => {
+router.get('/datos', protected_routes, async (req, res) => {
   const user = req.session.user
   res.render('Datos.html', { user })
 });
 
-router.get('/', protected_routes, (req, res) => {
+router.get('/', protected_routes, async (req, res) => {
   const user = req.session.user
-
-  res.render('index.html', { user })
+  const users = await get_users()
+  res.render('index.html', { users })
 });
 
 router.put('/state/:id', async (req, res) => {
@@ -40,40 +38,45 @@ router.put('/state/:id', async (req, res) => {
   res.json({todo: 'ok'})
 })
 
-router.put('/update/:id', async (req, res) => {
+router.post('/update/:id', async (req, res) => {
   const ide = req.params.id
   const name = req.body.nombre
   const password = req.body.password
   const pass2 = req.body.password2
   const xp = req.body.xp
   const spec = req.body.spec
+  const email = req.body.email
   const path = req.body.path
-
-  console.log(xp)
+  const estado = req.body.state 
+  const button = req.body.btn
 
   // validar que contraseñas sean iguales
   if (password != pass2) {
-    req.flash('errors', 'La contraseñas no coinciden')
+    req.flash('errors', 'Las contraseñas no coinciden')
     return res.redirect('/datos')
   }
 
-  // Creo el usuario
-  const password_encrypt = await bcrypt.hash(password, 10)
-  console.log(password_encrypt)
-  await update_usr(ide, name, password_encrypt, xp, spec)
-  // 4. Guardo el nuevo usuario en sesión
-  req.session.user = { name, email, password, xp, spec, path }
-  res.redirect('/')
+  if (password == null) {
+    req.flash('errors', 'La contraseña es requerida, ya sea la contraseña anterior o la nueva')
+    return res.redirect('/datos')
+  }
 
-  
-  res.json({todo: 'ok'})
+  if (button == 'update') {
+    // Actualizo el usuario
+    const password_encrypt = await bcrypt.hash(password, 10)
+    await update_usr(ide, name, password_encrypt, xp, spec)
+    // 4. Guardo el nuevo usuario en sesión
+    const user = await get_user(email)
+    req.session.user = user
+    // Iniciamos sesion nuevamente
+    res.redirect('/datos')
+  }
+  if (button == 'delet') {
+    await del_usr(ide)
+    req.session.user = undefined
+    res.redirect('/login')
+  }
 })
 
-router.delete('/delete/:id', async (req, res) => {
-
-  await del_usr(req.params.id)
-
-  res.json({todo: 'ok'})
-})
 
 module.exports = router

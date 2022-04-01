@@ -1,19 +1,25 @@
 {% extends 'layout.html' %}
 
+{% block nav %}
+            <a class="nav-link" href="/">Inicio</a>
+            <a class="nav-link active" aria-current="page" href="/datos">Usuario</a>
+            <a class="nav-link" href="/admin">Administrar</a>
+            <a class="nav-link" href="/logout">Salir</a>
+{% endblock %}
+
 {% block main %}
 
-    <h1>Skate Park</h1>
+    <h1 class="m-4">Skate Park</h1>
 
     <div class="py-4">
       <h2>Datos del perfil</h2>
       <hr class="w-50 m-auto" />
 
-      <form action="/update/{{ user.id }}" method="put" >
+      <form action="/update/{{ user.id }}" method="post" enctype="multipart/form-data">
         <div class="form-group row w-50 m-auto">
           <div class="form-group col-12 col-sm-6">
             <label>Email</label>
             <input
-              name="email"
               class="form-control m-auto"
               disabled
               value="{{ user.email }}"
@@ -51,13 +57,15 @@
           </div>
           <div class="form-group d-none">
             <input name="path" class="form-control m-auto" value="{{ user.foto }}" />
+            <input name="email" class="form-control m-auto" value="{{ user.email }}" />
+            <input name="state" class="form-control m-auto" value="{{ user.estado }}" />
           </div>
         </div>
         <div class="mb-1">
-          <button class="btn btn-primary">Actualizar</button>
+          <button name="btn" value="update" class="btn btn-primary">Actualizar</button>
         </div>
         <div>
-          <button class="btn btn-danger" formaction="/delete/{{ user.id }}" formmethod="delete">Eliminar cuenta</button>
+          <button name="btn" value="delet" class="btn btn-danger">Eliminar cuenta</button>
         </div>
       </form>
     </div>
